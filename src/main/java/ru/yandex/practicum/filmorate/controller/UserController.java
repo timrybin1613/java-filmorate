@@ -65,7 +65,7 @@ public class UserController {
         String email = userUpdateDto.getEmail();
         LocalDate birthday = userUpdateDto.getBirthday();
 
-        if (!login.isEmpty()) user.setLogin(login);
+        if (login != null && !login.isEmpty()) user.setLogin(login);
         if (name != null) user.setName(name);
         if (email != null) user.setEmail(email);
         if (birthday != null) user.setBirthday(birthday);

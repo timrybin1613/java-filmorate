@@ -58,7 +58,7 @@ public class FilmDtoTest {
     }
 
     @Test
-    void shouldFailWhenDescriptionIsBlank() {
+    void shouldPassWhenDescriptionIsBlank() {
         FilmCreateDto dto = new FilmCreateDto();
         dto.setName("film");
         dto.setDescription("");
@@ -66,7 +66,7 @@ public class FilmDtoTest {
         dto.setDuration(1D);
 
         Set<ConstraintViolation<FilmCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("description")));
+        assertTrue(violations.isEmpty());
     }
 
     @Test
@@ -196,6 +196,19 @@ public class FilmDtoTest {
         dto.setId(1);
         dto.setName("film");
         dto.setReleaseDate(LocalDate.now());
+        dto.setDuration(1D);
+
+        Set<ConstraintViolation<FilmUpdateDto>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void shouldFailWhenMinReleaseDate() {
+        FilmUpdateDto dto = new FilmUpdateDto();
+        dto.setId(1);
+        dto.setName("film");
+        dto.setDescription("film");
+        dto.setReleaseDate(LocalDate.of(1895, 12, 28));
         dto.setDuration(1D);
 
         Set<ConstraintViolation<FilmUpdateDto>> violations = validator.validate(dto);

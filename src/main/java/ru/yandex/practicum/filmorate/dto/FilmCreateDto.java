@@ -12,7 +12,6 @@ public class FilmCreateDto {
     @NotBlank
     private String name;
 
-    @NotBlank
     @Size(max = 200)
     private String description;
 

@@ -20,6 +20,6 @@ public class MinReleaseDateValidator implements ConstraintValidator<MinReleaseDa
         if (localDate == null) {
             return true;
         }
-        return localDate.isAfter(MIN_DATE);
+        return !localDate.isBefore(MIN_DATE);
     }
 }
