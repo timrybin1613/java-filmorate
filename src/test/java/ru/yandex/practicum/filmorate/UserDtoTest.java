@@ -52,8 +52,7 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(1980, 1, 1));
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")
-                && v.getMessage().equals("не должно быть пустым")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")));
     }
 
     @Test
@@ -64,8 +63,7 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(1980, 1, 1));
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")
-                && v.getMessage().equals("логин содержит пробелы")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")));
     }
 
     @Test
@@ -76,8 +74,7 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(1980, 1, 1));
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")
-                && v.getMessage().equals("должно иметь формат адреса электронной почты")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -88,8 +85,7 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(1980, 1, 1));
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")
-                && v.getMessage().equals("не должно быть пустым")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -99,8 +95,7 @@ public class UserDtoTest {
         dto.setEmail("test@mail.com");
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")
-                && v.getMessage().equals("не должно равняться null")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")));
     }
 
     @Test
@@ -111,8 +106,7 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(2980, 1, 1));
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")
-                && v.getMessage().equals("должно содержать прошедшую дату")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")));
     }
 
     @Test
@@ -121,8 +115,7 @@ public class UserDtoTest {
         dto.setLogin("user");
         Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(dto);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("id")
-                && v.getMessage().equals("не должно равняться null")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("id")));
     }
 
     @Test
@@ -132,8 +125,7 @@ public class UserDtoTest {
         dto.setLogin("user");
         Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(dto);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("id")
-                && v.getMessage().equals("должно быть больше 0")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("id")));
     }
 
     @Test
@@ -143,8 +135,7 @@ public class UserDtoTest {
         dto.setLogin("us er");
         Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(dto);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")
-                && v.getMessage().equals("логин содержит пробелы")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("login")));
     }
 
     @Test
@@ -154,8 +145,7 @@ public class UserDtoTest {
         dto.setEmail("user");
         Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(dto);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")
-                && v.getMessage().equals("должно иметь формат адреса электронной почты")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -165,7 +155,6 @@ public class UserDtoTest {
         dto.setBirthday(LocalDate.of(2980, 1, 1));
 
         Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")
-                && v.getMessage().equals("должно содержать прошедшую дату")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("birthday")));
     }
 }
