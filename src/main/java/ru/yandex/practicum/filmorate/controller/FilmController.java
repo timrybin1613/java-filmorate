@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dto.FilmCreateDto;
-import ru.yandex.practicum.filmorate.dto.FilmUpdateDto;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.dto.film.FilmCreateDto;
+import ru.yandex.practicum.filmorate.dto.film.FilmResponseDto;
+import ru.yandex.practicum.filmorate.dto.film.FilmUpdateDto;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -16,54 +16,61 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Integer, Film> films = new HashMap<Integer, Film>();
-    private int nextId = 0;
+    @Autowired
+    private final FilmService filmService;
+
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @GetMapping("/{id}")
+    public FilmResponseDto getFilmById(@PathVariable Integer id) {
+        return filmService.getFilmById(id);
+    }
 
     @GetMapping
-    public Collection<Film> getFilms() {
-        return films.values();
+    public Collection<FilmResponseDto> getFilms() {
+        return filmService.getFilms();
     }
 
     @PostMapping
-    public Film addFilm(@Valid @RequestBody FilmCreateDto filmCreateDto) {
+    public FilmResponseDto addFilm(@Valid @RequestBody FilmCreateDto filmCreateDto) {
         log.info("Adding film {}", filmCreateDto);
-        Film film = new Film();
-        int id = getNextId();
-        film.setId(id);
-        film.setName(filmCreateDto.getName());
-        film.setDescription(filmCreateDto.getDescription());
-        film.setReleaseDate(filmCreateDto.getReleaseDate());
-        film.setDuration(filmCreateDto.getDuration());
-
-        films.put(id, film);
-        log.info("Film added {}", film);
-        return film;
+        FilmResponseDto addFilm = filmService.addFilm(filmCreateDto);
+        log.info("Film added {}", addFilm);
+        return addFilm;
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody FilmUpdateDto filmUpdateDto) {
+    public FilmResponseDto updateFilm(@Valid @RequestBody FilmUpdateDto filmUpdateDto) {
         log.info("Updating film {}", filmUpdateDto);
-        int updatedFilmId = filmUpdateDto.getId();
-
-        Film updatedFilm = Optional.ofNullable(films.get(updatedFilmId))
-                .orElseThrow(() -> new NotFoundException("Film id " + updatedFilmId + " not found"));
-
-        LocalDate updatedReleaseDate = filmUpdateDto.getReleaseDate();
-
-        updatedFilm.setReleaseDate(updatedReleaseDate);
-
-        Double updatedDuration = filmUpdateDto.getDuration();
-        String name = filmUpdateDto.getName();
-        String description = filmUpdateDto.getDescription();
-
-        if (updatedDuration != null) updatedFilm.setDuration(updatedDuration);
-        if (name != null) updatedFilm.setName(name);
-        if (description != null) updatedFilm.setDescription(description);
+        FilmResponseDto updatedFilm = filmService.updateFilm(filmUpdateDto);
         log.info("Film updated {}", updatedFilm);
         return updatedFilm;
     }
 
-    private int getNextId() {
-        return nextId += 1;
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        log.info("Adding like, filmId - {}, userId - {}", id, userId);
+
+        filmService.addLikeToFilm(id, userId);
+
+        log.info("Like added, filmId - {}, userId - {}", id, userId);
     }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        log.info("Deleting like, filmId - {}, userId - {}", id, userId);
+
+        filmService.removeLikeFromFilm(id, userId);
+
+        log.info("Like deleted, filmId - {}, userId - {}", id, userId);
+    }
+
+    @GetMapping("/popular")
+    public Collection<FilmResponseDto> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        log.info("Getting popular films from database, count={}", count);
+        return filmService.getPopularFilms(count);
+    }
+
 }
