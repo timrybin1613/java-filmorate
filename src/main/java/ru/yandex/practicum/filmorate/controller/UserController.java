@@ -64,13 +64,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public Collection<User> getFriends(@PathVariable Integer id) {
+    public Collection<UserResponseDto> getFriends(@PathVariable Integer id) {
         log.info("Getting friends for userId - {}", id);
         return userService.getFriends(id);
     }
 
     @GetMapping("{id}/friends/common/{otherId}")
-    public Collection<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public Collection<UserResponseDto> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         log.info("Getting friends for userId - {}, otherId - {}", id, otherId);
         return userService.getCommonFriends(id, otherId);
     }

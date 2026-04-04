@@ -58,7 +58,6 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(UserUpdateDto dto) {
-
         User userToUpdate = userStorage.getUserById(dto.getId())
                 .orElseThrow(() -> {
                     log.warn("User with id {} not found", dto.getId());
@@ -97,7 +96,7 @@ public class UserService {
         friendshipStorage.removeFriendship(userId, friendId);
     }
 
-    public Collection<User> getFriends(Integer userId) {
+    public Collection<UserResponseDto> getFriends(Integer userId) {
         log.debug("get friends, userId {}", userId);
         validateUserExists(userId);
 
@@ -105,10 +104,11 @@ public class UserService {
         log.debug("Returned - {} friends", friendIds.size());
         return friendIds.stream().map(userStorage::getUserById)
                 .flatMap(Optional::stream)
+                .map(userMapper::toUserResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public Collection<User> getCommonFriends(Integer userId, Integer friendId) {
+    public Collection<UserResponseDto> getCommonFriends(Integer userId, Integer friendId) {
         log.debug("get common friends, userId {}, friendId {}", userId, friendId);
         validateUserExists(userId);
         validateUserExists(friendId);
@@ -117,6 +117,7 @@ public class UserService {
         log.debug("Returned - {} common friends", commonFriendIds.size());
         return commonFriendIds.stream().map(userStorage::getUserById)
                 .flatMap(Optional::stream)
+                .map(userMapper::toUserResponseDto)
                 .collect(Collectors.toList());
     }
 
