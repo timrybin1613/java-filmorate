@@ -5,8 +5,8 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.dto.FilmCreateDto;
-import ru.yandex.practicum.filmorate.dto.FilmUpdateDto;
+import ru.yandex.practicum.filmorate.dto.film.FilmCreateDto;
+import ru.yandex.practicum.filmorate.dto.film.FilmUpdateDto;
 
 import java.time.LocalDate;
 import java.util.Set;

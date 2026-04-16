@@ -14,10 +14,9 @@ import java.util.List;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(MethodArgumentNotValidException ex) {
 
