@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.dto.user.UserCreateDto;
 import ru.yandex.practicum.filmorate.dto.user.UserResponseDto;
 import ru.yandex.practicum.filmorate.dto.user.UserUpdateDto;
+import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
@@ -15,11 +16,12 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final UserService userService;
+    private final FriendshipService friendshipService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     @GetMapping("/{id}")
@@ -51,26 +53,26 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Adding friend userId - {}, friendId - {}", id, friendId);
-        userService.addFriend(id, friendId);
+        friendshipService.addFriend(id, friendId);
         log.info("Added friend userId - {}, friendId - {}", id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Deleting friend userId - {}, friendId - {}", id, friendId);
-        userService.removeFriend(id, friendId);
+        friendshipService.removeFriend(id, friendId);
         log.info("Deleted friend userId - {}, friendId - {}", id, friendId);
     }
 
     @GetMapping("/{id}/friends")
     public Collection<UserResponseDto> getFriends(@PathVariable Integer id) {
         log.info("Getting friends for userId - {}", id);
-        return userService.getFriends(id);
+        return friendshipService.getFriends(id);
     }
 
     @GetMapping("{id}/friends/common/{otherId}")
     public Collection<UserResponseDto> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         log.info("Getting friends for userId - {}, otherId - {}", id, otherId);
-        return userService.getCommonFriends(id, otherId);
+        return friendshipService.getCommonFriends(id, otherId);
     }
 }
