@@ -35,10 +35,10 @@ public class GenreDbStorage extends BaseRepository<Genre> implements GenreStorag
 
     @Override
     public List<Genre> findByIds(Collection<Long> ids) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
         if (ids == null || ids.isEmpty()) {
             return Collections.emptyList();
         }
+        MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
         return findManyWithNamedParams(SELECT_GENRES_BY_IDS, params, mapper);
     }

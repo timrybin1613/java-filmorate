@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.row.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.BaseRepository;
@@ -46,6 +47,10 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public User updateUser(User user) {
+        if (!existsUserById(user.getId())) {
+            throw new UserNotFoundException("User not found");
+        }
+
         StringBuilder sql = new StringBuilder("UPDATE users SET ");
         List<Object> paramsList = new ArrayList<>();
 

@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.exception.InternalServerException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.row.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.user.User;
 
@@ -140,7 +140,7 @@ public class UserDbStorageTests {
         user.setId(1L);
 
         assertThatThrownBy(() -> userStorage.updateUser(user))
-                .isInstanceOf(InternalServerException.class)
-                .hasMessage("Не удалось обновить данные");
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found");
     }
 }

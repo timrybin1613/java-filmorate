@@ -15,7 +15,6 @@ import java.util.*;
 @Primary
 @Repository
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
-
     private static final String SELECT_FILM_BY_ID = "SELECT * FROM film WHERE id=?";
     private static final String SELECT_FILM_BY_ID_WITH_GENRES = """
             SELECT
@@ -54,28 +53,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Collection<Film> getFilms() {
-        LinkedHashMap<Long, Film> filmMap = new LinkedHashMap<>();
-        jdbc.query(SELECT_ALL_FILM_WITH_GENRES, rs -> {
-
-            long filmId = rs.getLong("id");
-            Film film = filmMap.get(filmId);
-            if (film == null) {
-                film = new Film();
-                film.setId(filmId);
-                film.setName(rs.getString("name"));
-                film.setDescription(rs.getString("description"));
-                film.setReleaseDate(rs.getDate("release_date") != null ? rs.getDate("release_date").toLocalDate() : null);
-                film.setGenres(new HashSet<>());
-                film.setDuration(rs.getDouble("duration"));
-                film.setMpa(rs.getLong("mpa_id"));
-                filmMap.put(film.getId(), film);
-            }
-            Long genreId = rs.getObject("genre_id", Long.class);
-            if (genreId != null) {
-                filmMap.get(filmId).getGenres().add(genreId);
-            }
-        });
-        return filmMap.values();
+        return jdbc.query(SELECT_ALL_FILM_WITH_GENRES, new FilmWithGenresExtractor());
     }
 
     @Override
@@ -93,30 +71,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(long id) {
-        LinkedHashMap<Long, Film> filmMap = new LinkedHashMap<>();
-        jdbc.query(SELECT_FILM_BY_ID_WITH_GENRES, rs -> {
-            long filmId = rs.getLong("id");
-            Film film = filmMap.get(filmId);
-            if (film == null) {
-                film = new Film();
-                film.setId(filmId);
-                film.setName(rs.getString("name"));
-                film.setDescription(rs.getString("description"));
-                film.setReleaseDate(rs.getDate("release_date") != null ? rs.getDate("release_date").toLocalDate() : null);
-                film.setGenres(new HashSet<>());
-                film.setDuration(rs.getDouble("duration"));
-                film.setMpa(rs.getLong("mpa_id"));
-                filmMap.put(film.getId(), film);
-            }
-            Long genreId = rs.getObject("genre_id", Long.class);
-
-            if (genreId != null) {
-                filmMap.get(filmId).getGenres().add(genreId);
-            }
-
-        }, id);
-
-        return filmMap.values().stream().findFirst();
+        List<Film> films = jdbc.query(SELECT_FILM_BY_ID_WITH_GENRES,  new FilmWithGenresExtractor(), id);
+        if (films == null || films.isEmpty()) return Optional.empty();
+        return Optional.of(films.getFirst());
     }
 
     @Override

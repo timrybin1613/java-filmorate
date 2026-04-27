@@ -60,6 +60,6 @@ public class InMemoryFriendshipStorage implements FriendshipStorage {
 
     @Override
     public List<User> getCommonFriendsId(Integer userId, Integer friendId) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
