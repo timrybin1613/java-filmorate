@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.dto.film.FilmCreateDto;
 import ru.yandex.practicum.filmorate.dto.film.FilmResponseDto;
@@ -15,8 +14,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-
-    @Autowired
     private final FilmService filmService;
 
     public FilmController(FilmService filmService) {
@@ -50,7 +47,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+    public void addLike(@PathVariable Long id, @PathVariable Long userId) {
         log.info("Adding like, filmId - {}, userId - {}", id, userId);
 
         filmService.addLikeToFilm(id, userId);
@@ -59,7 +56,7 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
+    public void deleteLike(@PathVariable Long id, @PathVariable Long userId) {
         log.info("Deleting like, filmId - {}, userId - {}", id, userId);
 
         filmService.removeLikeFromFilm(id, userId);

@@ -11,7 +11,7 @@ public class UserUpdateDto {
 
     @NotNull
     @Positive
-    private Integer id;
+    private Long id;
 
     @NoSpacesLogin
     private String login;
